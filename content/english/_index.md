@@ -9,6 +9,10 @@ banner:
     label: "Get Started Now"
     link: "https://hellojinwoo.github.io"
 
+title: "Blog Postings"
+meta_title: ""
+description: "this is meta description"
+
 # Features
 features:
   - title: "What's Included in Hugoplate"
