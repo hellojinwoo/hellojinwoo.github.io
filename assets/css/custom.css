@@ -1,0 +1,11 @@
+/* 첫 번째 이미지 (크기 유지) */
+.h-36.w-36 {
+    width: 144px !important;
+    height: 144px !important;
+}
+
+/* 두 번째 이미지 (크기 작게 설정) */
+.h-24.w-24 {
+    width: 52px !important; /* 원하는 너비 */
+    height: 52px !important; /* 원하는 높이 */
+}

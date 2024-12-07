@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Zinoflow</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Zinoflow</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>© 2024 Zinoflow</copyright>
+    <lastBuildDate>Thu, 05 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Building a Foundation in Coding</title>
+      <link>http://localhost:1313/posts/code-learn-article1/</link>
+      <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/code-learn-article1/</guid>
+      <description></description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/code-learn-article1/featured.png" />
+    </item>
+    
+    <item>
+      <title>Effective Learning Strategies</title>
+      <link>http://localhost:1313/posts/code-learn-article2/</link>
+      <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/code-learn-article2/</guid>
+      <description></description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/code-learn-article2/featured.png" />
+    </item>
+    
+    <item>
+      <title>Finding Balance in Life</title>
+      <link>http://localhost:1313/posts/life-thoughts-article1/</link>
+      <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life-thoughts-article1/</guid>
+      <description></description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/life-thoughts-article1/featured.png" />
+    </item>
+    
+    <item>
+      <title>The Importance of Self-Development</title>
+      <link>http://localhost:1313/posts/life-thoughts-article2/</link>
+      <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life-thoughts-article2/</guid>
+      <description></description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/life-thoughts-article2/featured.png" />
+    </item>
+    
+  </channel>
+</rss>
