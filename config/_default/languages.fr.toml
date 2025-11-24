@@ -1,0 +1,27 @@
+disabled = false
+languageCode = "fr"
+languageName = "Français"
+weight = 2
+title = "Mon Blog"
+
+[params]
+  displayName = "FR"
+  isoCode = "fr"
+  rtl = false
+  dateFormat = "2 January 2006"
+  # logo = "img/logo.png"
+  # secondaryLogo = "img/secondary-logo.png"
+  # description = "Mon site web génial"
+  # copyright = "Copy, _right?_ :thinking_face:"
+
+# [params.author]
+#   name = "Votre nom"
+#   email = "youremail@example.com"
+#   image = "img/blowfish_logo.png"
+#   imageQuality = 96
+#   headline = "I'm only human"
+#   bio = "Un peu sur vous"
+#   links = [
+#     { email = "mailto:hello@your_domain.com" },
+#     { github = "https://github.com/username" },
+#   ]

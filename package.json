@@ -1,0 +1,33 @@
+{
+  "name": "hugo-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "server": "hugo server --buildDrafts --disableFastRender",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@notionhq/client": "^4.0.2",
+    "dotenv": "^17.2.1",
+    "front-matter": "^4.0.2",
+    "fs-extra": "^11.3.2",
+    "markdown-table": "^3.0.4",
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.9.1",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

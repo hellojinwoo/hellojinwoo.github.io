@@ -1,0 +1,27 @@
+disabled = false
+languageCode = "ko"
+languageName = "ko"
+weight = 1
+title = "내 블로그"
+
+[params]
+  displayName = "KO"
+  isoCode = "ko"
+  rtl = false
+  dateFormat = "2006년 1월 2일"
+  # logo = "img/logo.png"
+  # secondaryLogo = "img/secondary-logo.png"
+  # description = "내 멋진 웹사이트"
+  # copyright = "Copy, _right?_ :thinking_face:"
+
+# [params.author]
+#   name = "당신의 이름"
+#   email = "youremail@example.com"
+#   image = "img/blowfish_logo.png"
+#   imageQuality = 96
+#   headline = "I'm only human"
+#   bio = "당신에 대한 간단한 소개"
+#   links = [
+#     { email = "mailto:hello@your_domain.com" },
+#     { github = "https://github.com/username" },
+#   ]
