@@ -8,9 +8,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-  # Runs every 5 minutes to sync with Notion
+  # Runs 3 times a day to sync with Notion (9 AM, 1 PM, 6 PM UTC)
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 9,13,18 * * *'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
