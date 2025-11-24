@@ -35,6 +35,12 @@ export async function getCoverLink(
     : pageIdToApiUrl(page_id);
 }
 
+export function pageIdToApiUrl(page_id: string): string {
+  // Convert Notion page ID to API URL for accessing the cover image
+  const id = page_id.replaceAll("-", "");
+  return `https://www.notion.so/image/${encodeURIComponent(`https://www.notion.so/${id}`)}?table=block&id=${id}`;
+}
+
 export function getFileName(title: string, page_id: string): string {
   return (
     title.replaceAll(" ", "-").replace(/--+/g, "-") +
