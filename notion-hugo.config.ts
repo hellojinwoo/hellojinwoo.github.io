@@ -12,17 +12,17 @@ const userConfig: UserConfig = {
             // Korean database
             {
                 database_id: '297711b8a78880018f67d0883832583b',
-                target_folder: 'ko'
+                target_folder: 'ko/posts'
             },
             // French database (프랑스어 데이터베이스 생성 후 ID를 여기에 입력하세요)
             {
                 database_id: '297711b8a788807c9f4ced71c561e0e9',
-                target_folder: 'fr'
+                target_folder: 'fr/posts'
             },
             // English database (영어 데이터베이스 생성 후 ID를 여기에 입력하세요)
             {
                 database_id: '297711b8a788804e9553de5de4846344',
-                target_folder: 'en'
+                target_folder: 'en/posts'
             }
         ],
     }
