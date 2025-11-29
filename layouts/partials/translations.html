@@ -1,0 +1,43 @@
+{{ if hugo.IsMultilingual }}
+  <div>
+    <div class="cursor-pointer flex items-center nested-menu">
+      <span class="me-1">
+        {{ partial "icon.html" "language" }}
+      </span>
+      <div
+        class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400"
+        title="{{ .Title }}">
+        {{- i18n "global.language" | markdownify -}}
+      </div>
+    </div>
+    <div class="absolute menuhide">
+      <div class="pt-2 p-5 mt-2 rounded-xl backdrop-blur shadow-2xl">
+        <div class="flex flex-col space-y-3">
+          {{ if .IsTranslated }}
+            {{/* If current page has translations, link to them */}}
+            {{ range .AllTranslations }}
+              <a href="{{ .RelPermalink }}" class="flex items-center">
+                <p
+                  class="text-sm font-sm hover:text-primary-600 dark:hover:text-primary-400"
+                  title="{{ .Title }}">
+                  {{ .Language.Params.displayName | emojify }}
+                </p>
+              </a>
+            {{ end }}
+          {{ else }}
+            {{/* If no translations, link to language home pages */}}
+            {{ range site.Languages }}
+              <a href="{{ .Lang | relLangURL }}/" class="flex items-center">
+                <p
+                  class="text-sm font-sm hover:text-primary-600 dark:hover:text-primary-400"
+                  title="{{ .Params.displayName }}">
+                  {{ .Params.displayName | emojify }}
+                </p>
+              </a>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+{{ end }}

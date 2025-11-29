@@ -3,6 +3,7 @@ languageCode = "ko"
 languageName = "ko"
 weight = 1
 title = "내 블로그"
+contentDir = "content/ko"
 
 [params]
   displayName = "KO"

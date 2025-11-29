@@ -3,6 +3,7 @@ languageCode = "fr"
 languageName = "Français"
 weight = 2
 title = "Mon Blog"
+contentDir = "content/fr"
 
 [params]
   displayName = "FR"

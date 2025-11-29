@@ -15,7 +15,7 @@ enableCodeCopy = false
 
 replyByEmail = false
 
-mainSections = ["ko", ""]
+mainSections = ["posts", "ko", "en", "fr"]
 # robots = ""
 
 disableImageOptimization = false
