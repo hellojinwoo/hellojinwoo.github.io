@@ -66,7 +66,7 @@ export async function loadConfig(): Promise<Config> {
       if (block.type === "child_database") {
         config.mount.databases.push({
           database_id: block.id,
-          target_folder: block.child_database.title,
+          target_folder: `${block.child_database.title}/posts`,
         });
       }
       if (block.type === "child_page") {
