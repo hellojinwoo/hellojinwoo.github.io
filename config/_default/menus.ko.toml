@@ -15,6 +15,16 @@
   pageRef = "posts"
   weight = 10
 
+[[main]]
+  name = "Work"
+  pageRef = "categories/work"
+  weight = 20
+
+[[main]]
+  name = "Life"
+  pageRef = "categories/life"
+  weight = 30
+
 #[[main]]
 #  name = "Parent"
 #  weight = 20

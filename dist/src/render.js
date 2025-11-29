@@ -153,6 +153,10 @@ async function renderPage(page, notion) {
     if (frontMatter.공개여부 !== undefined) {
         frontMatter.draft = !frontMatter.공개여부;
     }
+    // Map 카테고리 to Hugo categories taxonomy
+    if (frontMatter.카테고리) {
+        frontMatter.categories = [frontMatter.카테고리];
+    }
     // save metadata
     frontMatter.NOTION_METADATA = page;
     frontMatter.MANAGED_BY_NOTION_HUGO = true;

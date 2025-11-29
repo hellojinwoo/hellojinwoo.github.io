@@ -153,6 +153,11 @@ export async function renderPage(page: PageObjectResponse, notion: Client) {
     frontMatter.draft = !frontMatter.공개여부;
   }
 
+  // Map 카테고리 to Hugo categories taxonomy
+  if (frontMatter.카테고리) {
+    frontMatter.categories = [frontMatter.카테고리 as string];
+  }
+
   // save metadata
   frontMatter.NOTION_METADATA = page;
   frontMatter.MANAGED_BY_NOTION_HUGO = true;
