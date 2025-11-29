@@ -26,3 +26,5 @@ Thumbs.db
 
 # Content (will be generated from Notion)
 content/
+# But keep _index.md files (section pages)
+!content/**/posts/_index.md
