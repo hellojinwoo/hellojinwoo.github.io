@@ -4,7 +4,7 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { NotionToMarkdown } from "./markdown/notion-to-md";
 import YAML from "yaml";
 import { DatabaseMount, PageMount } from "./config";
-import { getPageTitle, getCoverLink, getFileName } from "./helpers";
+import { getPageTitle, getCoverLink, getFileName, getFolderName, downloadImage } from "./helpers";
 import path from "path";
 import { getContentFile } from "./file";
 
@@ -34,6 +34,9 @@ export async function renderPage(page: PageObjectResponse, notion: Client) {
   if (featuredImageLink) {
     frontMatter.featuredImage = featuredImageLink;
   }
+
+  // Variable to store thumbnail URL
+  let thumbnailUrl: string | null = null;
 
   // map page properties to front matter
   for (const property in page.properties) {
@@ -73,14 +76,28 @@ export async function renderPage(page: PageObjectResponse, notion: Client) {
           break;
         case "status":
           if (response.status) frontMatter[property] = response.status.name;
+          break;
         // ignore these properties
         case "last_edited_by":
         case "last_edited_time":
         case "rollup":
-        case "files":
         case "formula":
         case "created_by":
         case "created_time":
+          break;
+        case "files":
+          // Handle thumbnail property specially
+          if (property.toLowerCase() === "thumbnail") {
+            const files = response.files;
+            if (files && files.length > 0) {
+              const file = files[0];
+              if (file.type === "file") {
+                thumbnailUrl = file.file.url;
+              } else if (file.type === "external") {
+                thumbnailUrl = file.external.url;
+              }
+            }
+          }
           break;
         default:
           break;
@@ -152,6 +169,7 @@ export async function renderPage(page: PageObjectResponse, notion: Client) {
       frontInjectString +
       "\n" +
       mdString,
+    thumbnailUrl,
   };
 }
 
@@ -160,21 +178,31 @@ export async function savePage(
   notion: Client,
   mount: DatabaseMount | PageMount,
 ) {
-  const postpath = path.join(
-    "content",
-    mount.target_folder,
-    getFileName(getPageTitle(page), page.id),
-  );
-  const post = getContentFile(postpath);
+  const title = getPageTitle(page);
+  const folderName = getFolderName(title, page.id);
+  const folderPath = path.join("content", mount.target_folder, folderName);
+  const indexPath = path.join(folderPath, "index.md");
+  
+  // Check if the page is up-to-date (check index.md in folder)
+  const post = getContentFile(indexPath);
   if (post && post.metadata.last_edited_time === page.last_edited_time) {
-    console.info(`[Info] The post ${postpath} is up-to-date, skipped.`);
+    console.info(`[Info] The post ${folderPath} is up-to-date, skipped.`);
     return;
   }
+  
   // otherwise update the page
-  console.info(`[Info] Updating ${postpath}`);
+  console.info(`[Info] Updating ${folderPath}`);
 
-  const { title, pageString } = await renderPage(page, notion);
-  const fileName = getFileName(title, page.id);
-  fs.ensureDirSync(`content/${mount.target_folder}`);
-  fs.writeFileSync(`content/${mount.target_folder}/${fileName}`, pageString);
+  const { pageString, thumbnailUrl } = await renderPage(page, notion);
+  
+  // Create folder structure (page bundle)
+  fs.ensureDirSync(folderPath);
+  
+  // Write markdown content as index.md
+  fs.writeFileSync(indexPath, pageString);
+  
+  // Download thumbnail image if available
+  if (thumbnailUrl) {
+    await downloadImage(thumbnailUrl, folderPath, "featured");
+  }
 }
