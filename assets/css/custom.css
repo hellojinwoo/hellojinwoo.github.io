@@ -1,0 +1,211 @@
+/* Tistory-style cards - matching mysnowbear.tistory.com exactly */
+.tistory-card {
+  margin: 10px;
+  padding: 0;
+  border: 0;
+}
+
+.tistory-card-thumb {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Thumbnail 높이: tistory 원본과 동일하게 240px */
+.tistory-card-thumb-inner {
+  width: 100%;
+  min-height: 240px;
+  background-position: center;
+  background-size: cover;
+  transition: all 0.3s ease;
+}
+
+.tistory-card-thumb:hover .tistory-card-thumb-inner {
+  opacity: 0.7;
+  transform: scale(1.05);
+}
+
+/* Content 높이: tistory 원본과 동일하게 160px */
+.tistory-card-content {
+  padding: 5px 0 0 0;
+  height: 140px;
+  overflow: hidden;
+}
+
+.tistory-card-meta {
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+
+.tistory-card-category {
+  color: #206776;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.tistory-card-category:hover {
+  color: #Fa0;
+}
+
+.tistory-card-separator {
+  margin: 0 8px;
+  color: #999;
+}
+
+.tistory-card-date {
+  color: #999;
+  font-size: 12px;
+}
+
+/* Title: tistory 원본 - 13.1pt, 1줄, line-height 22px */
+.tistory-card-title {
+  margin-bottom: 3px;
+  font-size: 13pt;
+  font-weight: 700;
+  color: #206776;
+  text-decoration: none;
+  line-height: 22px;
+  max-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  transition: color 0.2s;
+}
+
+@supports (-webkit-line-clamp: 1) {
+  .tistory-card-title {
+    display: -webkit-box;
+  }
+}
+
+.tistory-card-title:hover {
+  color: #Fa0;
+}
+
+/* Summary: 4줄로 제한하여 잘림 방지 */
+.tistory-card-summary {
+  position: relative;
+  font-size: 10.5pt;
+  font-weight: 500;
+  color: #777;
+  line-height: 20px;
+  max-height: 80px; /* 20px * 4줄 = 80px */
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+@supports (-webkit-line-clamp: 1) {
+  .tistory-card-summary {
+    display: -webkit-box;
+  }
+}
+
+/* Ellipsis fallback 제거 - line-clamp가 처리함 */
+
+@supports (-webkit-line-clamp: 1) {
+  .tistory-card-summary::after {
+    display: none;
+  }
+}
+
+/* Mobile adjustments - tistory 원본과 동일 */
+@media (max-width: 979px) {
+  .tistory-card-thumb-inner {
+    min-height: 180px;
+  }
+  
+  .tistory-card-content {
+    height: 160px;
+  }
+}
+
+/* Sidebar styles */
+.tistory-sidebar {
+  background-color: #F8F8F8;
+  padding: 25px;
+  margin-top: 40px;
+}
+
+.tistory-sidebar-section {
+  margin-bottom: 30px;
+}
+
+.tistory-sidebar-title {
+  color: #206776;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 3;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.tistory-sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tistory-sidebar-list li {
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+
+.tistory-sidebar-list a {
+  color: #454545;
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s;
+  font-size: 13px;
+}
+
+.tistory-sidebar-list a:hover {
+  color: #Fa0;
+}
+
+/* Category list */
+.tistory-category-list {
+  line-height: 1.5;
+  font-size: 13px;
+}
+
+.tistory-category-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tistory-category-list ul ul {
+  padding-left: 15px;
+  padding-top: 3px;
+}
+
+.tistory-category-list li {
+  padding: 2px 0;
+}
+
+.tistory-category-list a {
+  color: #454545;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 13px;
+}
+
+.tistory-category-list a:hover {
+  color: #Fa0;
+}
+
+.tistory-category-count {
+  color: #999;
+  font-size: 12px;
+  margin-left: 5px;
+}

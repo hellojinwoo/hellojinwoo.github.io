@@ -1,0 +1,87 @@
+{{/* Tistory-style card template */}}
+{{ $disableImageOptimization := site.Store.Get "disableImageOptimization" }}
+
+{{ $page := .Page }}
+{{ $featured := "" }}
+{{ $featuredURL := "" }}
+{{ if not .Params.hideFeatureImage }}
+  {{ with $page }}
+    {{ with .Params.featureimage }}
+      {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+        {{ if site.Params.hotlinkFeatureImage }}
+          {{ $featuredURL = . }}
+        {{ else }}
+          {{ $featured = resources.GetRemote . }}
+        {{ end }}
+      {{ else }}
+        {{ $featured = resources.Get . }}
+      {{ end }}
+    {{ end }}
+
+    {{ if not (or $featured $featuredURL) }}
+      {{ $images := .Resources.ByType "image" }}
+      {{ range slice "*feature*" "*cover*" "*thumbnail*" }}
+        {{ if not $featured }}{{ $featured = $images.GetMatch . }}{{ end }}
+      {{ end }}
+    {{ end }}
+
+    {{ if not (or $featured $featuredURL) }}
+      {{ $default := site.Store.Get "defaultFeaturedImage" }}
+      {{ if $default.url }}
+        {{ $featuredURL = $default.url }}
+      {{ else if $default.obj }}
+        {{ $featured = $default.obj }}
+      {{ end }}
+    {{ end }}
+
+    {{ if not $featuredURL }}
+      {{ with $featured }}
+        {{ $featuredURL = .RelPermalink }}
+        {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
+          {{ $featuredURL = (.Resize "600x").RelPermalink }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<article class="tistory-card">
+  {{/* Thumbnail */}}
+  {{ with $featuredURL }}
+    <a href="{{ $page.RelPermalink }}" class="tistory-card-thumb">
+      <div class="tistory-card-thumb-inner" style="background-image: url('{{ . }}')"></div>
+    </a>
+  {{ end }}
+  
+  {{/* Content */}}
+  <div class="tistory-card-content">
+    {{/* Category | Date */}}
+    <div class="tistory-card-meta">
+      {{ with .GetTerms "categories" }}
+        {{ range first 1 . }}
+          <a href="{{ .RelPermalink }}" class="tistory-card-category">{{ .LinkTitle }}</a>
+        {{ end }}
+      {{ end }}
+      <span class="tistory-card-separator">|</span>
+      <span class="tistory-card-date">
+        {{ .Date | time.Format "2006.01.02" }}
+      </span>
+    </div>
+    
+    {{/* Title */}}
+    <a href="{{ .RelPermalink }}" class="tistory-card-title">
+      {{ .Title | emojify }}
+    </a>
+    
+    {{/* Summary - 5 lines (show description, content, or placeholder) */}}
+    <a href="{{ .RelPermalink }}" class="tistory-card-summary">
+      {{ if .Description }}
+        {{ .Description | plainify | truncate 300 }}
+      {{ else if .Content }}
+        {{ .Content | plainify | truncate 300 }}
+      {{ else }}
+        {{ i18n "article.click_to_read" | default "클릭하여 글 읽기..." }}
+      {{ end }}
+    </a>
+  </div>
+</article>

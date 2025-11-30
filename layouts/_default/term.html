@@ -1,0 +1,61 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "term" }}
+  {{ $showHero := .Params.showHero | default site.Params.term.showHero | default false }}
+  {{ if $showHero }}
+    {{ $heroStyle := print "hero/" site.Params.term.heroStyle ".html" }}
+    {{ if templates.Exists ( printf "partials/%s" $heroStyle ) }}
+      {{ partial $heroStyle . }}
+    {{ else }}
+      {{ partial "hero/basic.html" . }}
+    {{ end }}
+  {{- end -}}
+
+
+  <header class="mt-5">
+    {{ if .Params.showBreadcrumbs | default (site.Params.term.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
+    <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+      {{ partial "article-meta/term.html" (dict "context" . "scope" "single") }}
+    </div>
+  </header>
+
+  <section class="flex flex-col max-w-full mt-0 mb-5 prose dark:prose-invert lg:flex-row">
+    {{ if .Content }}
+      <div class="min-w-0 min-h-0 max-w-prose">
+        {{ .Content }}
+      </div>
+      {{ $jsPage := resources.Get "js/page.js" }}
+      {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+      <script
+        type="text/javascript"
+        src="{{ $jsPage.RelPermalink }}"
+        integrity="{{ $jsPage.Data.Integrity }}"
+        data-oid="views_term_{{ .Data.Term }}"
+        data-oid-likes="likes_term_{{ .Data.Term }}"></script>
+    {{ end }}
+  </section>
+
+  {{ if gt .Pages 0 }}
+    {{/* Use 8 items per page like homepage */}}
+    {{ $itemsPerPage := 8 }}
+    {{ $paginator := .Paginate .Pages $itemsPerPage }}
+
+    {{/* Tistory-style 4x2 grid */}}
+    <section class="w-full grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+      {{ range $paginator.Pages }}
+        {{ partial "article-link/tistory-card.html" . }}
+      {{ end }}
+    </section>
+
+  {{ else }}
+    <section class="mt-10 prose dark:prose-invert">
+      <p class="py-8 border-t">
+        <em>{{ i18n "term.no_articles" | emojify }}</em>
+      </p>
+    </section>
+  {{ end }}
+
+  {{ partial "pagination.html" . }}
+{{ end }}

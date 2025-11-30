@@ -1,0 +1,47 @@
+{{/* Tistory-style sidebar with categories, recent posts, and recent comments */}}
+
+<div class="tistory-sidebar">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    {{/* Categories */}}
+    <div class="tistory-sidebar-section">
+      <h3 class="tistory-sidebar-title">{{ i18n "categories.label" | default "카테고리" }}</h3>
+      <div class="tistory-category-list">
+        <ul>
+          {{ range .Site.Taxonomies.categories }}
+            <li>
+              <a href="{{ .Page.RelPermalink }}">
+                {{ .Page.Title }}
+                <span class="tistory-category-count">({{ .Count }})</span>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+    
+    {{/* Recent Posts */}}
+    <div class="tistory-sidebar-section">
+      <h3 class="tistory-sidebar-title">{{ i18n "article.recent" | default "새로운 이야기" }}</h3>
+      <ul class="tistory-sidebar-list">
+        {{ range first 12 .Site.RegularPages }}
+          <li>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+    
+    {{/* Recent Comments - placeholder for future implementation */}}
+    <div class="tistory-sidebar-section">
+      <h3 class="tistory-sidebar-title">{{ i18n "article.comments" | default "새로운 댓글" }}</h3>
+      <ul class="tistory-sidebar-list">
+        {{/* This will be populated when comment system is implemented */}}
+        <li class="text-neutral-500 dark:text-neutral-400 text-sm">
+          {{ i18n "global.coming_soon" | default "댓글 기능이 곧 추가됩니다." }}
+        </li>
+      </ul>
+    </div>
+    
+  </div>
+</div>
