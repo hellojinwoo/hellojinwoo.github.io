@@ -25,15 +25,17 @@
   transform: scale(1.05);
 }
 
-/* Content 높이: tistory 원본과 동일하게 160px */
+/* 1. Thumbnail과 Content 사이 간격: Content 높이 및 패딩 */
 .tistory-card-content {
-  padding: 5px 0 0 0;
+  padding: 0;
+  margin-top: -5px; /* 음수 margin으로 thumbnail과 더 가깝게 */
   height: 140px;
   overflow: hidden;
 }
 
+/* 2. 카테고리|날짜와 제목 사이 간격 */
 .tistory-card-meta {
-  margin-bottom: 3px;
+  margin-bottom: -5px; /* 음수 margin으로 제목과 더 가깝게 */
   font-size: 12px;
 }
 
@@ -60,7 +62,7 @@
 
 /* Title: tistory 원본 - 13.1pt, 1줄, line-height 22px */
 .tistory-card-title {
-  margin-bottom: 3px;
+  margin-bottom: 0px;
   font-size: 13pt;
   font-weight: 700;
   color: #206776;
@@ -115,7 +117,7 @@
   }
 }
 
-/* Mobile adjustments - tistory 원본과 동일 */
+/* Mobile adjustments */
 @media (max-width: 979px) {
   .tistory-card-thumb-inner {
     min-height: 180px;
