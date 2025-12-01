@@ -52,13 +52,7 @@
   const CURRENT_LANG = '{{ .Site.Language.Lang | default "ko" }}';
   const MAX_COMMENTS = 12;
   const PREVIEW_LENGTH = 40;
-  
-  // Language path prefixes for filtering
-  const langPrefixes = {
-    'ko': '/ko/',
-    'en': '/en/',
-    'fr': '/fr/'
-  };
+  const SITE_URL = '{{ .Site.BaseURL }}';
   
   function truncateText(text, maxLength) {
     if (!text) return '';
@@ -73,9 +67,9 @@
     const diff = now - date;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     
-    if (days === 0) return '오늘';
-    if (days === 1) return '어제';
-    if (days < 7) return days + '일 전';
+    if (days === 0) return CURRENT_LANG === 'ko' ? '오늘' : CURRENT_LANG === 'fr' ? "Aujourd'hui" : 'Today';
+    if (days === 1) return CURRENT_LANG === 'ko' ? '어제' : CURRENT_LANG === 'fr' ? 'Hier' : 'Yesterday';
+    if (days < 7) return CURRENT_LANG === 'ko' ? days + '일 전' : CURRENT_LANG === 'fr' ? 'Il y a ' + days + ' jours' : days + ' days ago';
     
     return date.toLocaleDateString(CURRENT_LANG === 'ko' ? 'ko-KR' : 
                                    CURRENT_LANG === 'fr' ? 'fr-FR' : 'en-US', {
@@ -84,25 +78,53 @@
     });
   }
   
+  function normalizeUrl(url) {
+    // Convert localhost URLs to production URLs for proper linking
+    if (!url) return '#';
+    return url.replace(/http:\/\/localhost:\d+/g, SITE_URL.replace(/\/$/, ''));
+  }
+  
+  function isCommentForCurrentLang(threadLink) {
+    // Parse the thread URL to check language
+    if (!threadLink) return false;
+    
+    try {
+      const url = new URL(threadLink.replace(/http:\/\/localhost:\d+/g, 'https://hellojinwoo.github.io'));
+      const pathname = url.pathname;
+      
+      // Korean (default): URLs like /posts/... (no /en/ or /fr/ prefix)
+      // English: URLs like /en/posts/...
+      // French: URLs like /fr/posts/...
+      
+      if (CURRENT_LANG === 'ko') {
+        // Korean: must NOT start with /en/ or /fr/
+        return !pathname.startsWith('/en/') && !pathname.startsWith('/fr/');
+      } else if (CURRENT_LANG === 'en') {
+        // English: must start with /en/
+        return pathname.startsWith('/en/');
+      } else if (CURRENT_LANG === 'fr') {
+        // French: must start with /fr/
+        return pathname.startsWith('/fr/');
+      }
+      return true;
+    } catch (e) {
+      return true; // If URL parsing fails, include the comment
+    }
+  }
+  
   function renderComments(comments) {
     const container = document.getElementById('recent-comments-list');
     if (!container) return;
     
-    // Filter comments by current language
-    const langPrefix = langPrefixes[CURRENT_LANG] || '/ko/';
-    const filteredComments = comments.filter(function(comment) {
-      const threadLink = comment.thread && comment.thread.link;
-      if (!threadLink) return false;
-      
-      try {
-        const url = new URL(threadLink);
-        return url.pathname.startsWith(langPrefix);
-      } catch (e) {
-        return threadLink.includes(langPrefix);
+    // Filter by language, spam, deleted status, then take first MAX_COMMENTS
+    const validComments = comments.filter(function(comment) {
+      if (comment.isSpam || comment.isDeleted || !comment.thread || !comment.thread.link) {
+        return false;
       }
+      return isCommentForCurrentLang(comment.thread.link);
     }).slice(0, MAX_COMMENTS);
     
-    if (filteredComments.length === 0) {
+    if (validComments.length === 0) {
       container.innerHTML = '<li class="text-neutral-500 dark:text-neutral-400 text-sm">' +
         (CURRENT_LANG === 'ko' ? '아직 댓글이 없습니다.' :
          CURRENT_LANG === 'fr' ? 'Pas encore de commentaires.' :
@@ -110,11 +132,11 @@
       return;
     }
     
-    container.innerHTML = filteredComments.map(function(comment) {
+    container.innerHTML = validComments.map(function(comment) {
       const author = comment.author ? comment.author.name : 'Anonymous';
-      const preview = truncateText(comment.message, PREVIEW_LENGTH);
+      const preview = truncateText(comment.raw_message || comment.message, PREVIEW_LENGTH);
       const date = formatDate(comment.createdAt);
-      const link = comment.thread ? comment.thread.link : '#';
+      const link = normalizeUrl(comment.thread.link);
       
       return '<li class="recent-comment-item">' +
         '<a href="' + link + '#disqus_thread" class="recent-comment-link">' +
@@ -130,13 +152,12 @@
   
   function fetchRecentComments() {
     // Disqus API endpoint for recent comments
-    // Note: For production, you may want to use a server-side proxy to hide your API key
     const apiUrl = 'https://disqus.com/api/3.0/forums/listPosts.json' +
       '?forum=' + DISQUS_SHORTNAME +
-      '&limit=50' + // Fetch more to filter by language
+      '&limit=50' +
       '&related=thread' +
       '&order=desc' +
-      '&api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F'; // Public API key
+      '&api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F';
     
     fetch(apiUrl)
       .then(function(response) {
