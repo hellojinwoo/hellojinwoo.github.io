@@ -211,3 +211,93 @@
   font-size: 12px;
   margin-left: 5px;
 }
+
+/* Recent Comments Styles */
+.recent-comment-item {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.recent-comment-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.recent-comment-link {
+  display: block;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.recent-comment-link:hover .recent-comment-text {
+  color: #Fa0;
+}
+
+.recent-comment-text {
+  display: block;
+  color: #454545;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.recent-comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.recent-comment-author {
+  color: #206776;
+  font-weight: 600;
+}
+
+.recent-comment-date {
+  color: #999;
+}
+
+/* Loading state */
+.loading-comments {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .recent-comment-text {
+    color: #d1d5db;
+  }
+  
+  .recent-comment-item {
+    border-bottom-color: #374151;
+  }
+  
+  .recent-comment-author {
+    color: #5eead4;
+  }
+  
+  .recent-comment-date {
+    color: #9ca3af;
+  }
+}
+
+/* Disqus thread container styling */
+#disqus_thread {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+@media (prefers-color-scheme: dark) {
+  #disqus_thread {
+    border-top-color: #374151;
+  }
+}

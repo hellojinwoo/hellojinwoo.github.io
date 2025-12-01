@@ -32,16 +32,141 @@
       </ul>
     </div>
     
-    {{/* Recent Comments - placeholder for future implementation */}}
+    {{/* Recent Comments - Disqus integration */}}
     <div class="tistory-sidebar-section">
       <h3 class="tistory-sidebar-title">{{ i18n "article.comments" | default "새로운 댓글" }}</h3>
-      <ul class="tistory-sidebar-list">
-        {{/* This will be populated when comment system is implemented */}}
-        <li class="text-neutral-500 dark:text-neutral-400 text-sm">
-          {{ i18n "global.coming_soon" | default "댓글 기능이 곧 추가됩니다." }}
+      <ul id="recent-comments-list" class="tistory-sidebar-list">
+        <li class="text-neutral-500 dark:text-neutral-400 text-sm loading-comments">
+          {{ i18n "global.loading_comments" | default "댓글을 불러오는 중..." }}
         </li>
       </ul>
     </div>
     
   </div>
 </div>
+
+{{/* Disqus Recent Comments Script */}}
+<script>
+(function() {
+  const DISQUS_SHORTNAME = 'hellojinwoo';
+  const CURRENT_LANG = '{{ .Site.Language.Lang | default "ko" }}';
+  const MAX_COMMENTS = 12;
+  const PREVIEW_LENGTH = 40;
+  
+  // Language path prefixes for filtering
+  const langPrefixes = {
+    'ko': '/ko/',
+    'en': '/en/',
+    'fr': '/fr/'
+  };
+  
+  function truncateText(text, maxLength) {
+    if (!text) return '';
+    text = text.replace(/<[^>]*>/g, '').trim(); // Remove HTML tags
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  }
+  
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    if (days === 0) return '오늘';
+    if (days === 1) return '어제';
+    if (days < 7) return days + '일 전';
+    
+    return date.toLocaleDateString(CURRENT_LANG === 'ko' ? 'ko-KR' : 
+                                   CURRENT_LANG === 'fr' ? 'fr-FR' : 'en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+  
+  function renderComments(comments) {
+    const container = document.getElementById('recent-comments-list');
+    if (!container) return;
+    
+    // Filter comments by current language
+    const langPrefix = langPrefixes[CURRENT_LANG] || '/ko/';
+    const filteredComments = comments.filter(function(comment) {
+      const threadLink = comment.thread && comment.thread.link;
+      if (!threadLink) return false;
+      
+      try {
+        const url = new URL(threadLink);
+        return url.pathname.startsWith(langPrefix);
+      } catch (e) {
+        return threadLink.includes(langPrefix);
+      }
+    }).slice(0, MAX_COMMENTS);
+    
+    if (filteredComments.length === 0) {
+      container.innerHTML = '<li class="text-neutral-500 dark:text-neutral-400 text-sm">' +
+        (CURRENT_LANG === 'ko' ? '아직 댓글이 없습니다.' :
+         CURRENT_LANG === 'fr' ? 'Pas encore de commentaires.' :
+         'No comments yet.') + '</li>';
+      return;
+    }
+    
+    container.innerHTML = filteredComments.map(function(comment) {
+      const author = comment.author ? comment.author.name : 'Anonymous';
+      const preview = truncateText(comment.message, PREVIEW_LENGTH);
+      const date = formatDate(comment.createdAt);
+      const link = comment.thread ? comment.thread.link : '#';
+      
+      return '<li class="recent-comment-item">' +
+        '<a href="' + link + '#disqus_thread" class="recent-comment-link">' +
+          '<span class="recent-comment-text">' + preview + '</span>' +
+          '<span class="recent-comment-meta">' +
+            '<span class="recent-comment-author">' + author + '</span>' +
+            '<span class="recent-comment-date">' + date + '</span>' +
+          '</span>' +
+        '</a>' +
+      '</li>';
+    }).join('');
+  }
+  
+  function fetchRecentComments() {
+    // Disqus API endpoint for recent comments
+    // Note: For production, you may want to use a server-side proxy to hide your API key
+    const apiUrl = 'https://disqus.com/api/3.0/forums/listPosts.json' +
+      '?forum=' + DISQUS_SHORTNAME +
+      '&limit=50' + // Fetch more to filter by language
+      '&related=thread' +
+      '&order=desc' +
+      '&api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F'; // Public API key
+    
+    fetch(apiUrl)
+      .then(function(response) {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(function(data) {
+        if (data.code === 0 && data.response) {
+          renderComments(data.response);
+        } else {
+          throw new Error('Disqus API error');
+        }
+      })
+      .catch(function(error) {
+        console.error('Error fetching comments:', error);
+        const container = document.getElementById('recent-comments-list');
+        if (container) {
+          container.innerHTML = '<li class="text-neutral-500 dark:text-neutral-400 text-sm">' +
+            (CURRENT_LANG === 'ko' ? '댓글을 불러올 수 없습니다.' :
+             CURRENT_LANG === 'fr' ? 'Impossible de charger les commentaires.' :
+             'Unable to load comments.') + '</li>';
+        }
+      });
+  }
+  
+  // Fetch comments when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fetchRecentComments);
+  } else {
+    fetchRecentComments();
+  }
+})();
+</script>

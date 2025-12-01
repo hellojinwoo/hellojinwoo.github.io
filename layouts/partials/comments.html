@@ -1,0 +1,26 @@
+{{/* Disqus Comments Integration */}}
+{{/* Supports Google, Facebook, Twitter login for spam prevention */}}
+
+{{ $lang := .Lang | default "ko" }}
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * Disqus configuration
+     * - Uses page pathname for unique identifier
+     * - Sets language based on Hugo's current language
+     */
+    var disqus_config = function () {
+        this.page.url = '{{ .Permalink }}';
+        this.page.identifier = '{{ .RelPermalink }}';
+        this.language = '{{ $lang }}';
+    };
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://hellojinwoo.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
