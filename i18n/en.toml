@@ -1,0 +1,9 @@
+# Sidebar translations for English
+
+[sidebar]
+categories = "Categories"
+recent_posts = "Recent Posts"
+recent_comments = "Recent Comments"
+loading_comments = "Loading comments..."
+no_comments = "No comments yet."
+unable_to_load = "Unable to load comments."

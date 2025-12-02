@@ -5,7 +5,7 @@
     
     {{/* Categories */}}
     <div class="tistory-sidebar-section">
-      <h3 class="tistory-sidebar-title">{{ i18n "categories.label" | default "카테고리" }}</h3>
+      <h3 class="tistory-sidebar-title">{{ i18n "sidebar.categories" | default "카테고리" }}</h3>
       <div class="tistory-category-list">
         <ul>
           {{ range .Site.Taxonomies.categories }}
@@ -22,7 +22,7 @@
     
     {{/* Recent Posts */}}
     <div class="tistory-sidebar-section">
-      <h3 class="tistory-sidebar-title">{{ i18n "article.recent" | default "새로운 이야기" }}</h3>
+      <h3 class="tistory-sidebar-title">{{ i18n "sidebar.recent_posts" | default "새로운 이야기" }}</h3>
       <ul class="tistory-sidebar-list">
         {{ range first 12 .Site.RegularPages }}
           <li>
@@ -32,12 +32,12 @@
       </ul>
     </div>
     
-    {{/* Recent Comments - Disqus integration */}}
+    {{/* Recent Comments - Disqus API integration */}}
     <div class="tistory-sidebar-section">
-      <h3 class="tistory-sidebar-title">{{ i18n "article.comments" | default "새로운 댓글" }}</h3>
+      <h3 class="tistory-sidebar-title">{{ i18n "sidebar.recent_comments" | default "새로운 댓글" }}</h3>
       <ul id="recent-comments-list" class="tistory-sidebar-list">
         <li class="text-neutral-500 dark:text-neutral-400 text-sm loading-comments">
-          {{ i18n "global.loading_comments" | default "댓글을 불러오는 중..." }}
+          {{ i18n "sidebar.loading_comments" | default "댓글을 불러오는 중..." }}
         </li>
       </ul>
     </div>
@@ -45,18 +45,19 @@
   </div>
 </div>
 
-{{/* Disqus Recent Comments Script */}}
+{{/* Disqus Recent Comments Script - URL-based filtering */}}
 <script>
 (function() {
   const DISQUS_SHORTNAME = 'hellojinwoo';
+  const API_KEY = 'zfHDothhhqbsLeyJiEwdzFE7GJ8nem8NqYcAWgerP5cx5PRpk9OfcuqkUO56jNLz';
   const CURRENT_LANG = '{{ .Site.Language.Lang | default "ko" }}';
   const MAX_COMMENTS = 12;
   const PREVIEW_LENGTH = 40;
-  const SITE_URL = '{{ .Site.BaseURL }}';
+  const SITE_URL = 'https://hellojinwoo.github.io';
   
   function truncateText(text, maxLength) {
     if (!text) return '';
-    text = text.replace(/<[^>]*>/g, '').trim(); // Remove HTML tags
+    text = text.replace(/<[^>]*>/g, '').trim();
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   }
@@ -79,36 +80,39 @@
   }
   
   function normalizeUrl(url) {
-    // Convert localhost URLs to production URLs for proper linking
     if (!url) return '#';
-    return url.replace(/http:\/\/localhost:\d+/g, SITE_URL.replace(/\/$/, ''));
+    // Convert localhost URLs to production URLs
+    return url.replace(/http:\/\/localhost:\d+/g, SITE_URL);
   }
   
-  function isCommentForCurrentLang(threadLink) {
-    // Parse the thread URL to check language
+  function isCommentForCurrentSection(threadLink) {
     if (!threadLink) return false;
     
     try {
-      const url = new URL(threadLink.replace(/http:\/\/localhost:\d+/g, 'https://hellojinwoo.github.io'));
+      // Normalize the URL first
+      const normalizedLink = normalizeUrl(threadLink);
+      const url = new URL(normalizedLink);
       const pathname = url.pathname;
       
-      // Korean (default): URLs like /posts/... (no /en/ or /fr/ prefix)
-      // English: URLs like /en/posts/...
-      // French: URLs like /fr/posts/...
+      // Filter by URL path:
+      // Korean (default): /posts/... (no /en/ or /fr/ prefix)
+      // English: /en/posts/...
+      // French: /fr/posts/...
       
       if (CURRENT_LANG === 'ko') {
-        // Korean: must NOT start with /en/ or /fr/
+        // Korean section: URLs that don't start with /en/ or /fr/
         return !pathname.startsWith('/en/') && !pathname.startsWith('/fr/');
       } else if (CURRENT_LANG === 'en') {
-        // English: must start with /en/
+        // English section: URLs that start with /en/
         return pathname.startsWith('/en/');
       } else if (CURRENT_LANG === 'fr') {
-        // French: must start with /fr/
+        // French section: URLs that start with /fr/
         return pathname.startsWith('/fr/');
       }
       return true;
     } catch (e) {
-      return true; // If URL parsing fails, include the comment
+      console.error('URL parsing error:', e);
+      return true;
     }
   }
   
@@ -116,12 +120,12 @@
     const container = document.getElementById('recent-comments-list');
     if (!container) return;
     
-    // Filter by language, spam, deleted status, then take first MAX_COMMENTS
+    // Filter by URL section, exclude spam/deleted, take first MAX_COMMENTS
     const validComments = comments.filter(function(comment) {
       if (comment.isSpam || comment.isDeleted || !comment.thread || !comment.thread.link) {
         return false;
       }
-      return isCommentForCurrentLang(comment.thread.link);
+      return isCommentForCurrentSection(comment.thread.link);
     }).slice(0, MAX_COMMENTS);
     
     if (validComments.length === 0) {
@@ -151,24 +155,23 @@
   }
   
   function fetchRecentComments() {
-    // Disqus API endpoint for recent comments
     const apiUrl = 'https://disqus.com/api/3.0/forums/listPosts.json' +
       '?forum=' + DISQUS_SHORTNAME +
       '&limit=50' +
       '&related=thread' +
       '&order=desc' +
-      '&api_key=E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F';
+      '&api_key=' + API_KEY;
     
     fetch(apiUrl)
       .then(function(response) {
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
         return response.json();
       })
       .then(function(data) {
         if (data.code === 0 && data.response) {
           renderComments(data.response);
         } else {
-          throw new Error('Disqus API error');
+          throw new Error('Disqus API error: ' + (data.response || 'Unknown error'));
         }
       })
       .catch(function(error) {

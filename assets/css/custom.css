@@ -301,3 +301,53 @@
     border-top-color: #374151;
   }
 }
+
+/* Hide Disqus reactions/voting section ("What do you think?") */
+#disqus_thread .reaction-label,
+#disqus_thread .reaction,
+#disqus_thread .reactions,
+#disqus_thread [class*="reaction"],
+#disqus_thread .post-menu__reactions {
+  display: none !important;
+}
+
+/* Disqus Recent Comments Widget Styling */
+.disqus-recent-comments {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.disqus-recent-comments li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.disqus-recent-comments li:last-child {
+  border-bottom: none;
+}
+
+.disqus-recent-comments a {
+  color: #454545;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.disqus-recent-comments a:hover {
+  color: #Fa0;
+}
+
+.disqus-recent-comments .dsq-widget-meta {
+  font-size: 11px;
+  color: #999;
+}
+
+@media (prefers-color-scheme: dark) {
+  .disqus-recent-comments li {
+    border-bottom-color: #374151;
+  }
+  
+  .disqus-recent-comments a {
+    color: #d1d5db;
+  }
+}

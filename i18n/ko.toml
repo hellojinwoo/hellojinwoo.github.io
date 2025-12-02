@@ -1,0 +1,9 @@
+# Sidebar translations for Korean
+
+[sidebar]
+categories = "카테고리"
+recent_posts = "새로운 이야기"
+recent_comments = "새로운 댓글"
+loading_comments = "댓글을 불러오는 중..."
+no_comments = "아직 댓글이 없습니다."
+unable_to_load = "댓글을 불러올 수 없습니다."

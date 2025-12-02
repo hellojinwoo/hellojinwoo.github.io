@@ -1,0 +1,9 @@
+# Sidebar translations for French
+
+[sidebar]
+categories = "Catégories"
+recent_posts = "Articles récents"
+recent_comments = "Commentaires récents"
+loading_comments = "Chargement des commentaires..."
+no_comments = "Pas encore de commentaires."
+unable_to_load = "Impossible de charger les commentaires."
