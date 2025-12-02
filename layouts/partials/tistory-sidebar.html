@@ -45,7 +45,7 @@
   </div>
 </div>
 
-{{/* Disqus Recent Comments Script - URL-based filtering */}}
+{{/* Disqus Recent Comments Script - URL-based filtering with JSONP */}}
 <script>
 (function() {
   const DISQUS_SHORTNAME = 'hellojinwoo';
@@ -54,6 +54,15 @@
   const MAX_COMMENTS = 12;
   const PREVIEW_LENGTH = 40;
   const SITE_URL = 'https://hellojinwoo.github.io';
+  
+  // Global callback for JSONP
+  window.disqusRecentCommentsCallback = function(data) {
+    if (data.code === 0 && data.response) {
+      renderComments(data.response);
+    } else {
+      showError();
+    }
+  };
   
   function truncateText(text, maxLength) {
     if (!text) return '';
@@ -81,7 +90,6 @@
   
   function normalizeUrl(url) {
     if (!url) return '#';
-    // Convert localhost URLs to production URLs
     return url.replace(/http:\/\/localhost:\d+/g, SITE_URL);
   }
   
@@ -89,30 +97,30 @@
     if (!threadLink) return false;
     
     try {
-      // Normalize the URL first
       const normalizedLink = normalizeUrl(threadLink);
       const url = new URL(normalizedLink);
       const pathname = url.pathname;
       
-      // Filter by URL path:
-      // Korean (default): /posts/... (no /en/ or /fr/ prefix)
-      // English: /en/posts/...
-      // French: /fr/posts/...
-      
       if (CURRENT_LANG === 'ko') {
-        // Korean section: URLs that don't start with /en/ or /fr/
         return !pathname.startsWith('/en/') && !pathname.startsWith('/fr/');
       } else if (CURRENT_LANG === 'en') {
-        // English section: URLs that start with /en/
         return pathname.startsWith('/en/');
       } else if (CURRENT_LANG === 'fr') {
-        // French section: URLs that start with /fr/
         return pathname.startsWith('/fr/');
       }
       return true;
     } catch (e) {
-      console.error('URL parsing error:', e);
       return true;
+    }
+  }
+  
+  function showError() {
+    const container = document.getElementById('recent-comments-list');
+    if (container) {
+      container.innerHTML = '<li class="text-neutral-500 dark:text-neutral-400 text-sm">' +
+        (CURRENT_LANG === 'ko' ? '댓글을 불러올 수 없습니다.' :
+         CURRENT_LANG === 'fr' ? 'Impossible de charger les commentaires.' :
+         'Unable to load comments.') + '</li>';
     }
   }
   
@@ -120,7 +128,6 @@
     const container = document.getElementById('recent-comments-list');
     if (!container) return;
     
-    // Filter by URL section, exclude spam/deleted, take first MAX_COMMENTS
     const validComments = comments.filter(function(comment) {
       if (comment.isSpam || comment.isDeleted || !comment.thread || !comment.thread.link) {
         return false;
@@ -155,35 +162,21 @@
   }
   
   function fetchRecentComments() {
-    const apiUrl = 'https://disqus.com/api/3.0/forums/listPosts.json' +
+    // Use JSONP to bypass CORS
+    const script = document.createElement('script');
+    script.src = 'https://disqus.com/api/3.0/forums/listPosts.jsonp' +
       '?forum=' + DISQUS_SHORTNAME +
       '&limit=50' +
       '&related=thread' +
       '&order=desc' +
-      '&api_key=' + API_KEY;
+      '&api_key=' + API_KEY +
+      '&callback=disqusRecentCommentsCallback';
     
-    fetch(apiUrl)
-      .then(function(response) {
-        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
-        return response.json();
-      })
-      .then(function(data) {
-        if (data.code === 0 && data.response) {
-          renderComments(data.response);
-        } else {
-          throw new Error('Disqus API error: ' + (data.response || 'Unknown error'));
-        }
-      })
-      .catch(function(error) {
-        console.error('Error fetching comments:', error);
-        const container = document.getElementById('recent-comments-list');
-        if (container) {
-          container.innerHTML = '<li class="text-neutral-500 dark:text-neutral-400 text-sm">' +
-            (CURRENT_LANG === 'ko' ? '댓글을 불러올 수 없습니다.' :
-             CURRENT_LANG === 'fr' ? 'Impossible de charger les commentaires.' :
-             'Unable to load comments.') + '</li>';
-        }
-      });
+    script.onerror = function() {
+      showError();
+    };
+    
+    document.body.appendChild(script);
   }
   
   // Fetch comments when DOM is ready
