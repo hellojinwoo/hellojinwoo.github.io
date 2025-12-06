@@ -226,7 +226,10 @@
 }
 
 .recent-comment-link {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   text-decoration: none;
   transition: all 0.2s;
 }
@@ -236,28 +239,22 @@
 }
 
 .recent-comment-text {
-  display: block;
+  flex: 1;
+  min-width: 0;
   color: #454545;
   font-size: 13px;
   line-height: 1.5;
-  margin-bottom: 4px;
   word-break: break-word;
-}
-
-.recent-comment-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-}
-
-.recent-comment-author {
-  color: #206776;
-  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .recent-comment-date {
+  flex-shrink: 0;
   color: #999;
+  font-size: 11px;
+  white-space: nowrap;
 }
 
 /* Loading state */
