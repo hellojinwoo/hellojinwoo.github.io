@@ -141,7 +141,7 @@
 
 .tistory-sidebar-title {
   color: #206776;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 3;
   border-bottom: 1px solid #ddd;
@@ -167,7 +167,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color 0.2s;
-  font-size: 19px;
+  font-size: 16px;
 }
 
 .tistory-sidebar-list a:hover {
@@ -177,7 +177,7 @@
 /* Category list */
 .tistory-category-list {
   line-height: 1.5;
-  font-size: 19px;
+  font-size: 16px;
 }
 
 .tistory-category-list ul {
@@ -199,7 +199,7 @@
   color: #454545;
   text-decoration: none;
   transition: color 0.2s;
-  font-size: 19px;
+  font-size: 16px;
 }
 
 .tistory-category-list a:hover {
@@ -208,7 +208,7 @@
 
 .tistory-category-count {
   color: #999;
-  font-size: 18px;
+  font-size: 14px;
   margin-left: 5px;
 }
 
@@ -226,10 +226,7 @@
 }
 
 .recent-comment-link {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
+  display: inline;
   text-decoration: none;
   transition: all 0.2s;
 }
@@ -239,21 +236,22 @@
 }
 
 .recent-comment-text {
-  flex: 1;
-  min-width: 0;
+  display: inline;
   color: #454545;
-  font-size: 19px;
+  font-size: 16px;
   line-height: 1.5;
   word-break: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+.recent-comment-spacer {
+  display: inline;
+  color: transparent;
 }
 
 .recent-comment-date {
-  flex-shrink: 0;
+  display: inline;
   color: #999;
-  font-size: 16px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
