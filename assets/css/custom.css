@@ -141,7 +141,7 @@
 
 .tistory-sidebar-title {
   color: #206776;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 3;
   border-bottom: 1px solid #ddd;
@@ -167,7 +167,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color 0.2s;
-  font-size: 13px;
+  font-size: 19px;
 }
 
 .tistory-sidebar-list a:hover {
@@ -177,7 +177,7 @@
 /* Category list */
 .tistory-category-list {
   line-height: 1.5;
-  font-size: 13px;
+  font-size: 19px;
 }
 
 .tistory-category-list ul {
@@ -199,7 +199,7 @@
   color: #454545;
   text-decoration: none;
   transition: color 0.2s;
-  font-size: 13px;
+  font-size: 19px;
 }
 
 .tistory-category-list a:hover {
@@ -208,7 +208,7 @@
 
 .tistory-category-count {
   color: #999;
-  font-size: 12px;
+  font-size: 18px;
   margin-left: 5px;
 }
 
@@ -229,7 +229,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 32px;
   text-decoration: none;
   transition: all 0.2s;
 }
@@ -242,7 +242,7 @@
   flex: 1;
   min-width: 0;
   color: #454545;
-  font-size: 13px;
+  font-size: 19px;
   line-height: 1.5;
   word-break: break-word;
   overflow: hidden;
@@ -253,7 +253,7 @@
 .recent-comment-date {
   flex-shrink: 0;
   color: #999;
-  font-size: 11px;
+  font-size: 16px;
   white-space: nowrap;
 }
 
