@@ -25,9 +25,7 @@
           data-zoom-src="{{ $authorImage.RelPermalink }}">
       {{ end }}
     {{ end }}
-    <h1 class="text-4xl font-extrabold">
-      {{ .Site.Params.Author.name | default .Site.Title }}
-    </h1>
+    {{/* Hide the main title - it's already in the header */}}
     {{ with .Site.Params.Author.headline }}
       <h2 class="text-xl text-neutral-500 dark:text-neutral-400">
         {{ . | markdownify }}
@@ -42,6 +40,3 @@
 <section>
   {{ partial "recent-articles/main.html" . }}
 </section>
-
-{{/* Tistory-style sidebar */}}
-{{ partial "tistory-sidebar.html" . }}
