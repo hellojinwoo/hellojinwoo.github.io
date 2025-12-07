@@ -1,3 +1,9 @@
+/* Header logo size increase */
+header a span:not(.sr-only) {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+}
+
 /* Tistory-style cards - matching mysnowbear.tistory.com exactly */
 .tistory-card {
   margin: 10px;
