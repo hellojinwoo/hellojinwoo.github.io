@@ -26,19 +26,50 @@
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
+    
+    // Additional script to forcefully hide reactions after Disqus loads
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            var reactions = document.getElementById('reactions');
+            if (reactions) {
+                reactions.remove();
+            }
+            // Also try querySelector for backup
+            var reactionsAll = document.querySelectorAll('[id="reactions"], .reactions-refresh, [role="toolbar"][aria-label*="What do you think"]');
+            reactionsAll.forEach(function(el) {
+                el.remove();
+            });
+        }, 1000);
+        
+        // Keep checking and removing for 5 seconds
+        var interval = setInterval(function() {
+            var reactions = document.getElementById('reactions');
+            if (reactions) {
+                reactions.remove();
+            }
+        }, 500);
+        
+        setTimeout(function() {
+            clearInterval(interval);
+        }, 5000);
+    });
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <style>
-/* Aggressive hiding of Disqus reactions widget */
-#disqus_thread > * > div:nth-child(2),
-#disqus_thread .dsq-reactions,
-#disqus_thread iframe[title*="reaction"],
-#disqus_thread iframe[title*="Reaction"],
-#disqus_thread [data-dsq-component="reactions"],
-.dsq-reactions-widget {
+/* Aggressive hiding of Disqus reactions widget - targeting exact structure */
+#reactions,
+.reactions-refresh,
+div[role="toolbar"][aria-label*="What do you think"],
+.reaction-items,
+.reaction-item,
+#disqus_thread > div > div#reactions {
     display: none !important;
     visibility: hidden !important;
+    opacity: 0 !important;
     height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
 </style>
