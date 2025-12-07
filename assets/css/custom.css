@@ -1,13 +1,17 @@
-/* Header logo size increase - target the actual anchor tag */
-header a.text-base.font-medium {
-  font-size: 1.875rem !important;
-  line-height: 2.25rem !important;
+/* Header logo size increase - target the actual anchor tag (increase specificity) */
+header#the-header .flex a.text-base.font-medium,
+header#the-header nav a.text-base.font-medium,
+header#the-header a.text-base.font-medium {
+  font-size: 2.25rem !important; /* ~36px */
+  line-height: 2.5rem !important;
+  font-weight: 700 !important;
 }
 
-/* Fallback for header links */
-header a.font-medium {
-  font-size: 1.875rem !important;
-  line-height: 2.25rem !important;
+/* Fallback for any header links if needed */
+header#the-header a.font-medium {
+  font-size: 2.25rem !important;
+  line-height: 2.5rem !important;
+  font-weight: 700 !important;
 }
 
 /* Tistory-style cards - matching mysnowbear.tistory.com exactly */
