@@ -1,6 +1,6 @@
 /* Header logo size increase */
 header a span:not(.sr-only) {
-  font-size: 1.5rem !important;
+  font-size: 3rem !important;
   font-weight: 700 !important;
 }
 
