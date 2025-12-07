@@ -2,7 +2,7 @@ disabled = false
 languageCode = "fr"
 languageName = "Français"
 weight = 2
-title = "carnet de croquis de France"
+title = "Mon Blog"
 contentDir = "content/fr"
 
 [params]

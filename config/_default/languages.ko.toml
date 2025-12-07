@@ -2,7 +2,7 @@ disabled = false
 languageCode = "ko"
 languageName = "ko"
 weight = 1
-title = "프랑스 그림일기"
+title = "내 블로그"
 contentDir = "content/ko"
 
 [params]

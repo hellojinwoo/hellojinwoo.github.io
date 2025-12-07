@@ -2,7 +2,7 @@ disabled = false
 languageCode = "en"
 languageName = "English"
 weight = 3
-title = "French Sketch Diary"
+title = "My Blog"
 contentDir = "content/en"
 
 [params]
