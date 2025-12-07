@@ -15,14 +15,9 @@
         this.page.url = '{{ .Permalink }}';
         this.page.identifier = '{{ .RelPermalink }}';
         this.language = '{{ $lang }}';
-        this.callbacks.onReady = [function() {
-            // Hide reactions widget
-            var reactions = document.querySelector('#disqus_thread iframe[title*="Reactions"]');
-            if (reactions) {
-                reactions.style.display = 'none';
-                reactions.parentElement.style.display = 'none';
-            }
-        }];
+        
+        // Disable reactions completely
+        this.disable_reactions = true;
     };
     
     (function() { // DON'T EDIT BELOW THIS LINE
@@ -35,10 +30,15 @@
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <style>
-/* Hide Disqus reactions widget */
-#disqus_thread iframe[title*="Reactions"],
-#disqus_thread iframe[title*="reactions"],
+/* Aggressive hiding of Disqus reactions widget */
+#disqus_thread > * > div:nth-child(2),
+#disqus_thread .dsq-reactions,
+#disqus_thread iframe[title*="reaction"],
+#disqus_thread iframe[title*="Reaction"],
+#disqus_thread [data-dsq-component="reactions"],
 .dsq-reactions-widget {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
 }
 </style>
