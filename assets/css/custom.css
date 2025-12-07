@@ -141,7 +141,7 @@
 
 .tistory-sidebar-title {
   color: #206776;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 3;
   border-bottom: 1px solid #ddd;
@@ -167,7 +167,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   transition: color 0.2s;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .tistory-sidebar-list a:hover {
@@ -177,7 +177,7 @@
 /* Category list */
 .tistory-category-list {
   line-height: 1.5;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .tistory-category-list ul {
@@ -199,7 +199,7 @@
   color: #454545;
   text-decoration: none;
   transition: color 0.2s;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .tistory-category-list a:hover {
@@ -208,7 +208,7 @@
 
 .tistory-category-count {
   color: #999;
-  font-size: 13px;
+  font-size: 15px;
   margin-left: 5px;
 }
 
@@ -238,7 +238,7 @@
 .recent-comment-text {
   display: inline;
   color: #454545;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
   word-break: break-word;
 }
@@ -251,7 +251,7 @@
 .recent-comment-date {
   display: inline;
   color: #999;
-  font-size: 13px;
+  font-size: 15px;
   white-space: nowrap;
 }
 
@@ -308,7 +308,7 @@
 
 /* Disqus Recent Comments Widget Styling */
 .disqus-recent-comments {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
