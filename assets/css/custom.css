@@ -313,15 +313,6 @@ header#the-header a.font-medium {
   }
 }
 
-/* Hide Disqus reactions/voting section ("What do you think?") */
-#disqus_thread .reaction-label,
-#disqus_thread .reaction,
-#disqus_thread .reactions,
-#disqus_thread [class*="reaction"],
-#disqus_thread .post-menu__reactions {
-  display: none !important;
-}
-
 /* Disqus Recent Comments Widget Styling */
 .disqus-recent-comments {
   font-size: 15px;

@@ -1,33 +1,6 @@
 {{/* Disqus Comments Integration */}}
-{{/* Supports Google, Facebook, Twitter login for spam prevention */}}
 
 {{ $lang := .Lang | default "ko" }}
-
-{{/* Inject CSS immediately to hide reactions before they render */}}
-<style>
-#disqus_thread #reactions,
-#disqus_thread .reactions-refresh,
-#disqus_thread div.reactions-refresh,
-#disqus_thread div#reactions,
-#disqus_thread div[role="toolbar"],
-div#reactions.reactions-refresh,
-.reactions-refresh[role="toolbar"],
-#reactions {
-    display: none !important;
-    visibility: hidden !important;
-    width: 0 !important;
-    height: 0 !important;
-    max-height: 0 !important;
-    max-width: 0 !important;
-    overflow: hidden !important;
-    opacity: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
-    top: -9999px !important;
-    pointer-events: none !important;
-    clip: rect(0, 0, 0, 0) !important;
-}
-</style>
 
 <div id="disqus_thread"></div>
 <script>
@@ -37,52 +10,11 @@ div#reactions.reactions-refresh,
         this.language = '{{ $lang }}';
     };
 
-    // Function to remove reactions element completely from DOM
-    function removeReactions() {
-        var reactions = document.getElementById('reactions');
-        if (reactions) {
-            reactions.parentNode.removeChild(reactions);
-        }
-        // Also check for class-based selector
-        document.querySelectorAll('.reactions-refresh, [role="toolbar"][aria-label*="What do you think"]').forEach(function(el) {
-            el.parentNode.removeChild(el);
-        });
-    }
-
     (function() {
         var d = document, s = d.createElement('script');
         s.src = 'https://hellojinwoo.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
-
-    // Use MutationObserver to immediately remove reactions when added to DOM
-    var disqusThread = document.getElementById('disqus_thread');
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-                if (node.nodeType === 1) {
-                    // Check if the added node is the reactions element
-                    if (node.id === 'reactions' || node.classList.contains('reactions-refresh')) {
-                        node.parentNode.removeChild(node);
-                        return;
-                    }
-                    // Check if it contains reactions
-                    var reactionsInside = node.querySelector && node.querySelector('#reactions, .reactions-refresh');
-                    if (reactionsInside) {
-                        reactionsInside.parentNode.removeChild(reactionsInside);
-                    }
-                }
-            });
-        });
-        // Also do a general check
-        removeReactions();
-    });
-
-    observer.observe(disqusThread, { childList: true, subtree: true });
-
-    // Fallback: periodic removal for 30 seconds
-    var interval = setInterval(removeReactions, 100);
-    setTimeout(function() { clearInterval(interval); }, 30000);
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
