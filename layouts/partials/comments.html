@@ -9,67 +9,116 @@
      * Disqus configuration
      * - Uses page pathname for unique identifier
      * - Sets language based on Hugo's current language
-     * - Disables reactions ("What do you think?")
+     * - Disables reactions ("What do you think?") via callbacks
      */
     var disqus_config = function () {
         this.page.url = '{{ .Permalink }}';
         this.page.identifier = '{{ .RelPermalink }}';
         this.language = '{{ $lang }}';
-        
-        // Disable reactions completely
-        this.disable_reactions = true;
+
+        // Disable reactions via official config
+        this.reactions_enabled = false;
+
+        // Callback when Disqus is ready - hide reactions
+        this.callbacks.onReady = [function() {
+            hideDisqusReactions();
+        }];
     };
-    
+
+    function hideDisqusReactions() {
+        // Target the iframe and try to hide reactions inside
+        var iframe = document.getElementById('dsq-app1');
+        if (iframe) {
+            try {
+                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                var style = iframeDoc.createElement('style');
+                style.textContent = '#reactions, [data-testid="reactions"], .reaction { display: none !important; }';
+                iframeDoc.head.appendChild(style);
+            } catch(e) {
+                // Cross-origin restriction - use MutationObserver instead
+            }
+        }
+
+        // Hide reactions in main document
+        var selectors = [
+            '#reactions',
+            '[id="reactions"]',
+            '.reactions-refresh',
+            '[role="toolbar"][aria-label*="What do you think"]',
+            '.reaction-items',
+            '.reaction-item',
+            '[data-testid="reactions"]',
+            '.post-reactions'
+        ];
+
+        selectors.forEach(function(selector) {
+            document.querySelectorAll(selector).forEach(function(el) {
+                el.style.cssText = 'display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important;';
+            });
+        });
+    }
+
     (function() { // DON'T EDIT BELOW THIS LINE
         var d = document, s = d.createElement('script');
         s.src = 'https://hellojinwoo.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
-    
-    // Additional script to forcefully hide reactions after Disqus loads
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            var reactions = document.getElementById('reactions');
-            if (reactions) {
-                reactions.remove();
-            }
-            // Also try querySelector for backup
-            var reactionsAll = document.querySelectorAll('[id="reactions"], .reactions-refresh, [role="toolbar"][aria-label*="What do you think"]');
-            reactionsAll.forEach(function(el) {
-                el.remove();
+
+    // MutationObserver to catch dynamically loaded reactions
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) {
+                    if (node.id === 'reactions' ||
+                        (node.getAttribute && node.getAttribute('aria-label') &&
+                         node.getAttribute('aria-label').indexOf('What do you think') !== -1)) {
+                        node.style.cssText = 'display: none !important;';
+                    }
+                    // Check children too
+                    var reactions = node.querySelectorAll && node.querySelectorAll('#reactions, [aria-label*="What do you think"]');
+                    if (reactions) {
+                        reactions.forEach(function(el) {
+                            el.style.cssText = 'display: none !important;';
+                        });
+                    }
+                }
             });
-        }, 1000);
-        
-        // Keep checking and removing for 5 seconds
-        var interval = setInterval(function() {
-            var reactions = document.getElementById('reactions');
-            if (reactions) {
-                reactions.remove();
-            }
-        }, 500);
-        
-        setTimeout(function() {
-            clearInterval(interval);
-        }, 5000);
+        });
     });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Periodic check as fallback
+    var checkCount = 0;
+    var interval = setInterval(function() {
+        hideDisqusReactions();
+        checkCount++;
+        if (checkCount > 20) clearInterval(interval);
+    }, 500);
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <style>
-/* Aggressive hiding of Disqus reactions widget - targeting exact structure */
+/* Aggressive hiding of Disqus reactions widget */
 #reactions,
+[id="reactions"],
 .reactions-refresh,
 div[role="toolbar"][aria-label*="What do you think"],
 .reaction-items,
 .reaction-item,
-#disqus_thread > div > div#reactions {
+[data-testid="reactions"],
+.post-reactions,
+#disqus_thread #reactions,
+#disqus_thread [aria-label*="What do you think"] {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
     height: 0 !important;
+    max-height: 0 !important;
     overflow: hidden !important;
     position: absolute !important;
     left: -9999px !important;
+    pointer-events: none !important;
 }
 </style>
