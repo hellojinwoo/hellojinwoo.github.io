@@ -12,6 +12,44 @@ const yaml_1 = __importDefault(require("yaml"));
 const helpers_1 = require("./helpers");
 const path_1 = __importDefault(require("path"));
 const file_1 = require("./file");
+async function downloadAndReplaceImages(markdown, folderPath) {
+    // Find all markdown image links: ![alt](url)
+    const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+    let imageIndex = 0;
+    const imagePromises = [];
+    let match;
+    while ((match = imageRegex.exec(markdown)) !== null) {
+        const alt = match[1];
+        const url = match[2];
+        // Skip if already a local path
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            continue;
+        }
+        const originalMarkdown = match[0];
+        imageIndex++;
+        // Create promise for downloading each image
+        const promise = (async () => {
+            const baseName = `image-${imageIndex}`;
+            const localPath = await (0, helpers_1.downloadImage)(url, folderPath, baseName);
+            if (localPath) {
+                // Convert absolute path to relative path from index.md
+                const relativePath = path_1.default.relative(folderPath, localPath);
+                const replacement = `![${alt}](${relativePath})`;
+                return { original: originalMarkdown, replacement };
+            }
+            return { original: originalMarkdown, replacement: originalMarkdown };
+        })();
+        imagePromises.push(promise);
+    }
+    // Wait for all downloads to complete
+    const results = await Promise.all(imagePromises);
+    // Replace all images in markdown
+    let updatedMarkdown = markdown;
+    for (const result of results) {
+        updatedMarkdown = updatedMarkdown.replace(result.original, result.replacement);
+    }
+    return updatedMarkdown;
+}
 async function renderPage(page, notion) {
     // load formatter config
     const n2m = new notion_to_md_1.NotionToMarkdown({ notionClient: notion });
@@ -187,9 +225,11 @@ async function savePage(page, notion, mount) {
     }
     // otherwise update the page
     console.info(`[Info] Updating ${folderPath}`);
-    const { pageString, thumbnailUrl } = await renderPage(page, notion);
+    let { pageString, thumbnailUrl } = await renderPage(page, notion);
     // Create folder structure (page bundle)
     fs_extra_1.default.ensureDirSync(folderPath);
+    // Download all images in content and replace URLs with local paths
+    pageString = await downloadAndReplaceImages(pageString, folderPath);
     // Write markdown content as index.md
     fs_extra_1.default.writeFileSync(indexPath, pageString);
     // Download thumbnail image if available

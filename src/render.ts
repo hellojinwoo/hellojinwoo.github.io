@@ -4,9 +4,61 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { NotionToMarkdown } from "./markdown/notion-to-md";
 import YAML from "yaml";
 import { DatabaseMount, PageMount } from "./config";
-import { getPageTitle, getCoverLink, getFileName, getFolderName, downloadImage } from "./helpers";
+import { getPageTitle, getCoverLink, getFolderName, downloadImage } from "./helpers";
 import path from "path";
 import { getContentFile } from "./file";
+
+async function downloadAndReplaceImages(
+  markdown: string,
+  folderPath: string,
+): Promise<string> {
+  // Find all markdown image links: ![alt](url)
+  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+  let imageIndex = 0;
+  const imagePromises: Promise<{ original: string; replacement: string }>[] = [];
+
+  let match;
+  while ((match = imageRegex.exec(markdown)) !== null) {
+    const alt = match[1];
+    const url = match[2];
+
+    // Skip if already a local path
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      continue;
+    }
+
+    const originalMarkdown = match[0];
+    imageIndex++;
+
+    // Create promise for downloading each image
+    const promise = (async () => {
+      const baseName = `image-${imageIndex}`;
+      const localPath = await downloadImage(url, folderPath, baseName);
+
+      if (localPath) {
+        // Convert absolute path to relative path from index.md
+        const relativePath = path.relative(folderPath, localPath);
+        const replacement = `![${alt}](${relativePath})`;
+        return { original: originalMarkdown, replacement };
+      }
+
+      return { original: originalMarkdown, replacement: originalMarkdown };
+    })();
+
+    imagePromises.push(promise);
+  }
+
+  // Wait for all downloads to complete
+  const results = await Promise.all(imagePromises);
+
+  // Replace all images in markdown
+  let updatedMarkdown = markdown;
+  for (const result of results) {
+    updatedMarkdown = updatedMarkdown.replace(result.original, result.replacement);
+  }
+
+  return updatedMarkdown;
+}
 
 export async function renderPage(page: PageObjectResponse, notion: Client) {
   // load formatter config
@@ -187,25 +239,28 @@ export async function savePage(
   const folderName = getFolderName(title, page.id);
   const folderPath = path.join("content", mount.target_folder, folderName);
   const indexPath = path.join(folderPath, "index.md");
-  
+
   // Check if the page is up-to-date (check index.md in folder)
   const post = getContentFile(indexPath);
   if (post && post.metadata.last_edited_time === page.last_edited_time) {
     console.info(`[Info] The post ${folderPath} is up-to-date, skipped.`);
     return;
   }
-  
+
   // otherwise update the page
   console.info(`[Info] Updating ${folderPath}`);
 
-  const { pageString, thumbnailUrl } = await renderPage(page, notion);
-  
+  let { pageString, thumbnailUrl } = await renderPage(page, notion);
+
   // Create folder structure (page bundle)
   fs.ensureDirSync(folderPath);
-  
+
+  // Download all images in content and replace URLs with local paths
+  pageString = await downloadAndReplaceImages(pageString, folderPath);
+
   // Write markdown content as index.md
   fs.writeFileSync(indexPath, pageString);
-  
+
   // Download thumbnail image if available
   if (thumbnailUrl) {
     await downloadImage(thumbnailUrl, folderPath, "featured");
