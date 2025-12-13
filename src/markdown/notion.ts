@@ -1,4 +1,4 @@
-import { Client, isFullPage } from "@notionhq/client";
+import { Client, isFullPage, isFullBlock } from "@notionhq/client";
 import {
   GetBlockResponse,
   ListBlockChildrenResponse,
@@ -74,4 +74,24 @@ export const getPageRelrefFromId = async (
   const fileName = getFileName(title, page.id);
   const relref = `{{% relref "${fileName}" %}}`;
   return { title, relref };
+};
+
+export const getNotionFileUrl = async (
+  notion: Client,
+  blockId: string
+): Promise<string | null> => {
+  try {
+    const block = await notion.blocks.retrieve({ block_id: blockId });
+    // Check if block is a full block object with type property
+    if (!("type" in block)) {
+      return null;
+    }
+    if (block.type === "image" && "image" in block && block.image.type === "file") {
+      return block.image.file.url;
+    }
+    return null;
+  } catch (error) {
+    console.warn(`[Warning] Failed to get file URL for block ${blockId}`);
+    return null;
+  }
 };

@@ -5,7 +5,7 @@ import {
 } from "@notionhq/client/build/src/api-endpoints";
 import { CustomTransformer, MdBlock, NotionToMarkdownOptions } from "./types";
 import * as md from "./md";
-import { getBlockChildren, getPageRelrefFromId } from "./notion";
+import { getBlockChildren, getPageRelrefFromId, getNotionFileUrl } from "./notion";
 import { plainText } from "./md";
 
 /**
@@ -195,7 +195,10 @@ export class NotionToMarkdown {
         if (image.type === "external") {
           return md.image(plainText(image.caption), image.external.url);
         }
-        return md.image(plainText(image.caption), blockIdToApiUrl(block.id));
+        // For file type images, we need to get the actual URL from Notion's API
+        // Use a special marker that will be replaced with the actual URL later
+        const fileUrl = await getNotionFileUrl(this.notionClient, block.id);
+        return md.image(plainText(image.caption), fileUrl || blockIdToApiUrl(block.id));
       }
       case "divider": {
         return md.divider();

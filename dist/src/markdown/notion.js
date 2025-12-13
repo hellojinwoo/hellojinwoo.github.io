@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPageRelrefFromId = exports.getBlockChildren = void 0;
+exports.getNotionFileUrl = exports.getPageRelrefFromId = exports.getBlockChildren = void 0;
 exports.getPageTitle = getPageTitle;
 exports.getFileName = getFileName;
 const client_1 = require("@notionhq/client");
@@ -52,3 +52,21 @@ const getPageRelrefFromId = async (pageId, notion) => {
     return { title, relref };
 };
 exports.getPageRelrefFromId = getPageRelrefFromId;
+const getNotionFileUrl = async (notion, blockId) => {
+    try {
+        const block = await notion.blocks.retrieve({ block_id: blockId });
+        // Check if block is a full block object with type property
+        if (!("type" in block)) {
+            return null;
+        }
+        if (block.type === "image" && "image" in block && block.image.type === "file") {
+            return block.image.file.url;
+        }
+        return null;
+    }
+    catch (error) {
+        console.warn(`[Warning] Failed to get file URL for block ${blockId}`);
+        return null;
+    }
+};
+exports.getNotionFileUrl = getNotionFileUrl;

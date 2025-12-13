@@ -181,7 +181,10 @@ class NotionToMarkdown {
                 if (image.type === "external") {
                     return md.image((0, md_1.plainText)(image.caption), image.external.url);
                 }
-                return md.image((0, md_1.plainText)(image.caption), blockIdToApiUrl(block.id));
+                // For file type images, we need to get the actual URL from Notion's API
+                // Use a special marker that will be replaced with the actual URL later
+                const fileUrl = await (0, notion_1.getNotionFileUrl)(this.notionClient, block.id);
+                return md.image((0, md_1.plainText)(image.caption), fileUrl || blockIdToApiUrl(block.id));
             }
             case "divider": {
                 return md.divider();
