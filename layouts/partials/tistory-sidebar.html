@@ -54,7 +54,14 @@
   const MAX_COMMENTS = 12;
   const PREVIEW_LENGTH = 40;
   const SITE_URL = 'https://hellojinwoo.github.io';
-  
+
+  // List of all valid page URLs from the site
+  const VALID_URLS = new Set([
+    {{ range .Site.Pages -}}
+      {{ if not .IsHome }}'{{ .RelPermalink }}'{{ if not (eq .RelPermalink (last 1 .Site.Pages).RelPermalink) }},{{ end }}{{ end }}
+    {{ end -}}
+  ]);
+
   // Global callback for JSONP
   window.disqusRecentCommentsCallback = function(data) {
     if (data.code === 0 && data.response) {
@@ -124,12 +131,31 @@
     }
   }
   
+  function isPageExists(threadLink) {
+    if (!threadLink) return false;
+
+    try {
+      const normalizedLink = normalizeUrl(threadLink);
+      const url = new URL(normalizedLink);
+      const pathname = url.pathname;
+
+      // Check if the page exists in the site
+      return VALID_URLS.has(pathname);
+    } catch (e) {
+      return false;
+    }
+  }
+
   function renderComments(comments) {
     const container = document.getElementById('recent-comments-list');
     if (!container) return;
-    
+
     const validComments = comments.filter(function(comment) {
       if (comment.isSpam || comment.isDeleted || !comment.thread || !comment.thread.link) {
+        return false;
+      }
+      // Check if the comment's page exists
+      if (!isPageExists(comment.thread.link)) {
         return false;
       }
       return isCommentForCurrentSection(comment.thread.link);
