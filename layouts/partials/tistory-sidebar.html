@@ -58,7 +58,7 @@
   // List of all valid page URLs from the site
   const VALID_URLS = new Set([
     {{ range .Site.Pages -}}
-      {{ if not .IsHome }}'{{ .RelPermalink }}'{{ if not (eq .RelPermalink (last 1 .Site.Pages).RelPermalink) }},{{ end }}{{ end }}
+      {{ if not .IsHome }}'{{ .RelPermalink }}',{{ end }}
     {{ end -}}
   ]);
 
