@@ -1,6 +1,6 @@
-/* Center article content horizontally - only for single article pages */
-article.max-w-prose,
-article .prose {
+/* Center article content horizontally */
+.article-content,
+.article-content.max-w-prose {
   margin-left: auto !important;
   margin-right: auto !important;
 }
