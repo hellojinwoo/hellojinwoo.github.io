@@ -5,14 +5,14 @@ const userConfig: UserConfig = {
     mount: {
         manual: true,
         databases: [
-            // Korean posts database
+            // Korean posts database (ko)
             {
-                database_id: "2ba711b8a78880e29836f82c8c69a834",
+                database_id: "297711b8a78880cdba85d06177bf5563",
                 target_folder: "ko/posts"
             },
-            // French posts database
+            // French posts database (fr)
             {
-                database_id: "297711b8a788807c9f4ced71c561e0e9",
+                database_id: "2ba711b8a78880e29836f82c8c69a834",
                 target_folder: "fr/posts"
             }
         ]
