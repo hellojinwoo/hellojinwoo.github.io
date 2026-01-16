@@ -114,11 +114,11 @@ header#the-header nav a:hover svg {
 
 .tistory-card-separator {
   margin: 0 8px;
-  color: #999;
+  color: #206776; /* Work 카테고리와 동일한 푸른색 */
 }
 
 .tistory-card-date {
-  color: #999;
+  color: #206776; /* Work 카테고리와 동일한 푸른색 */
   font-size: 11.1pt; /* 제목(13.1pt)보다 2pt 작게 */
 }
 
