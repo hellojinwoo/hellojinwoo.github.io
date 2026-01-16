@@ -26,7 +26,7 @@
       <ul class="tistory-sidebar-list">
         {{ range first 12 .Site.RegularPages }}
           <li>
-            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            <a href="{{ .RelPermalink }}">{{ if gt (len .Title) 25 }}{{ slicestr .Title 0 25 }}...{{ else }}{{ .Title }}{{ end }}</a>
           </li>
         {{ end }}
       </ul>
