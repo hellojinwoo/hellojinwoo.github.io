@@ -98,7 +98,7 @@ header#the-header nav a:hover svg {
 /* 2. 카테고리|날짜와 제목 사이 간격 - 제목(13.1pt)보다 2pt 작게 */
 .tistory-card-meta {
   margin-bottom: -5px; /* 음수 margin으로 제목과 더 가깝게 */
-  font-size: 11.1pt;
+  font-size: 10.1pt;
 }
 
 .tistory-card-category {
@@ -119,7 +119,7 @@ header#the-header nav a:hover svg {
 
 .tistory-card-date {
   color: #206776; /* Work 카테고리와 동일한 푸른색 */
-  font-size: 11.1pt; /* 제목(13.1pt)보다 2pt 작게 */
+  font-size: 10.1pt; /* 제목(13.1pt)보다 2pt 작게 */
 }
 
 /* Title: tistory 원본 - 13.1pt, 1줄, line-height 22px */
