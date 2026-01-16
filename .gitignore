@@ -26,7 +26,8 @@ Thumbs.db
 
 # Content (will be generated from Notion)
 content/
-# But keep posts directories and _index.md files (section pages)
+# But keep language folders and posts structure
 !content/*/
+!content/*/_index.md
 !content/*/posts/
-!content/*/posts/_index.md
+!content/*/posts/**

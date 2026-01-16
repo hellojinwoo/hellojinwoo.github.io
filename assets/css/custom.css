@@ -5,6 +5,17 @@
   margin-right: auto !important;
 }
 
+/* Ensure article body section centers its content */
+section.prose {
+  justify-content: center !important;
+}
+
+/* Center the main article container */
+section.prose > div.min-w-0 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 /* Header logo size increase - target the actual anchor tag (increase specificity) */
 header#the-header .flex a.text-base.font-medium,
 header#the-header nav a.text-base.font-medium,
