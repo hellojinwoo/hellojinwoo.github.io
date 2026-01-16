@@ -11,15 +11,7 @@
   {{- end -}}
 
 
-  <header class="mt-5">
-    {{ if .Params.showBreadcrumbs | default (site.Params.term.showBreadcrumbs | default false) }}
-      {{ partial "breadcrumbs.html" . }}
-    {{ end }}
-    <h1 class="mt-5 text-4xl font-extrabold text-neutral-900 dark:text-neutral">{{ .Title }}</h1>
-    <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
-      {{ partial "article-meta/term.html" (dict "context" . "scope" "single") }}
-    </div>
-  </header>
+  {{/* 카테고리 제목 숨김 - 요구사항 3 */}}
 
   <section class="flex flex-col max-w-full mt-0 mb-5 prose dark:prose-invert lg:flex-row">
     {{ if .Content }}
@@ -42,8 +34,8 @@
     {{ $itemsPerPage := 8 }}
     {{ $paginator := .Paginate .Pages $itemsPerPage }}
 
-    {{/* Tistory-style 4x2 grid */}}
-    <section class="w-full grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+    {{/* Tistory-style 2-column flexbox layout */}}
+    <section class="tistory-card-container">
       {{ range $paginator.Pages }}
         {{ partial "article-link/tistory-card.html" . }}
       {{ end }}

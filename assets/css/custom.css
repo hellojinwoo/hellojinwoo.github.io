@@ -16,20 +16,32 @@ section.prose > div.min-w-0 {
   margin-right: auto !important;
 }
 
-/* Header logo size increase - target the actual anchor tag (increase specificity) */
-header#the-header .flex a.text-base.font-medium,
-header#the-header nav a.text-base.font-medium,
-header#the-header a.text-base.font-medium {
-  font-size: 2.25rem !important; /* ~36px */
-  line-height: 2.5rem !important;
+/* Header navigation menu - same size as logo, tistory blue color */
+header#the-header nav a,
+header#the-header nav button,
+header#the-header .main-menu nav a {
+  font-size: 1.55rem !important;
+  line-height: 2rem !important;
   font-weight: 700 !important;
+  color: #206776 !important;
 }
 
-/* Fallback for any header links if needed */
-header#the-header a.font-medium {
-  font-size: 2.25rem !important;
-  line-height: 2.5rem !important;
-  font-weight: 700 !important;
+header#the-header nav a:hover,
+header#the-header nav button:hover {
+  color: #Fa0 !important;
+}
+
+/* Header icons (search, language switcher) - same size */
+header#the-header nav button svg,
+header#the-header nav a svg {
+  width: 1.55rem !important;
+  height: 1.55rem !important;
+  color: #206776 !important;
+}
+
+header#the-header nav button:hover svg,
+header#the-header nav a:hover svg {
+  color: #Fa0 !important;
 }
 
 /* Tistory-style card container - matching Bootstrap row */
@@ -83,10 +95,10 @@ header#the-header a.font-medium {
   overflow: hidden;
 }
 
-/* 2. 카테고리|날짜와 제목 사이 간격 */
+/* 2. 카테고리|날짜와 제목 사이 간격 - 제목(13.1pt)보다 2pt 작게 */
 .tistory-card-meta {
   margin-bottom: -5px; /* 음수 margin으로 제목과 더 가깝게 */
-  font-size: 12px;
+  font-size: 11.1pt;
 }
 
 .tistory-card-category {
@@ -107,7 +119,7 @@ header#the-header a.font-medium {
 
 .tistory-card-date {
   color: #999;
-  font-size: 12px;
+  font-size: 11.1pt; /* 제목(13.1pt)보다 2pt 작게 */
 }
 
 /* Title: tistory 원본 - 13.1pt, 1줄, line-height 22px */
