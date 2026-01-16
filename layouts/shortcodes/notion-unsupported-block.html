@@ -1,0 +1,7 @@
+{{- /* This shortcode handles unsupported Notion blocks */ -}}
+{{- $type := .Get 0 -}}
+<div class="notion-unsupported-block" style="padding: 1rem; margin: 1rem 0; background-color: #f3f4f6; border-left: 4px solid #9ca3af; border-radius: 0.25rem;">
+  <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">
+    <strong>Unsupported Block:</strong> {{ $type }}
+  </p>
+</div>
