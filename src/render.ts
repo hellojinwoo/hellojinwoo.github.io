@@ -117,7 +117,13 @@ export async function renderPage(page: PageObjectResponse, notion: Client) {
           if (response.url) frontMatter[property] = response.url;
           break;
         case "date":
-          if (response.date) frontMatter[property] = response.date.start;
+          if (response.date) {
+            frontMatter[property] = response.date.start;
+            // Map 작성일 to Hugo's date field
+            if (property === "작성일" || property.toLowerCase() === "date" || property.toLowerCase() === "published") {
+              frontMatter.date = response.date.start;
+            }
+          }
           break;
         case "number":
           if (response.number) frontMatter[property] = response.number;
