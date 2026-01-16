@@ -32,6 +32,17 @@ header#the-header .main-menu nav a {
   font-size: 1.2rem !important;
 }
 
+/* Mobile menu items - center align */
+#menu-wrapper ul li a {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+#menu-wrapper ul li a p {
+  text-align: center !important;
+  width: 100% !important;
+}
+
 header#the-header nav a:hover,
 header#the-header nav button:hover {
   color: #Fa0 !important;
