@@ -1,3 +1,10 @@
+/* Center article content horizontally */
+article .prose,
+.prose {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 /* Header logo size increase - target the actual anchor tag (increase specificity) */
 header#the-header .flex a.text-base.font-medium,
 header#the-header nav a.text-base.font-medium,
