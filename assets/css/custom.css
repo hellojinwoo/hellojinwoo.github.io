@@ -99,6 +99,7 @@ header#the-header nav a:hover svg {
 .tistory-card-meta {
   margin-bottom: -5px; /* 음수 margin으로 제목과 더 가깝게 */
   font-size: 10.1pt;
+  font-weight: 700; /* Work | 2025.12.13 전체 bold */
 }
 
 .tistory-card-category {
