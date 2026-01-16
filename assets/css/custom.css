@@ -29,7 +29,7 @@ header#the-header .main-menu nav a {
 /* Search button - same size as logo */
 #search-button,
 #search-button-mobile {
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
 }
 
 header#the-header nav a:hover,
