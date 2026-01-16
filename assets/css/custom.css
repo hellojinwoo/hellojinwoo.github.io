@@ -1,6 +1,21 @@
 /* Center article content horizontally */
+#main-content,
+#main-content .prose,
 article .prose,
 .prose {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Ensure the main content container is centered */
+main {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+main > * {
+  width: 100% !important;
+  max-width: 65ch !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }
