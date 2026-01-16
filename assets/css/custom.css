@@ -26,6 +26,12 @@ header#the-header .main-menu nav a {
   color: #206776 !important;
 }
 
+/* Search button - same size as logo */
+#search-button,
+#search-button-mobile {
+  font-size: 1.4rem !important;
+}
+
 header#the-header nav a:hover,
 header#the-header nav button:hover {
   color: #Fa0 !important;
