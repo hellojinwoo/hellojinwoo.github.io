@@ -2,7 +2,7 @@ disabled = false
 languageCode = "en"
 languageName = "English"
 weight = 2
-title = "France Sketchbook"
+title = "Seoul to Paris"
 contentDir = "content/en"
 
 [params]
