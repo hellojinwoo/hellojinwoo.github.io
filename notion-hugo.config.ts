@@ -10,10 +10,10 @@ const userConfig: UserConfig = {
                 database_id: "297711b8a78880cdba85d06177bf5563",
                 target_folder: "ko/posts"
             },
-            // French posts database (fr)
+            // English posts database (en)
             {
-                database_id: "2ba711b8a78880e29836f82c8c69a834",
-                target_folder: "fr/posts"
+                database_id: "2ba711b8a78880dc915feaae63b1c076",
+                target_folder: "en/posts"
             }
         ]
     }

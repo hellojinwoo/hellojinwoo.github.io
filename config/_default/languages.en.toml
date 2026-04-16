@@ -1,27 +1,27 @@
-disabled = true
-languageCode = "fr"
-languageName = "Français"
+disabled = false
+languageCode = "en"
+languageName = "English"
 weight = 2
-title = "Carnet de croquis"
-contentDir = "content/fr"
+title = "France Sketchbook"
+contentDir = "content/en"
 
 [params]
-  displayName = "FR"
-  isoCode = "fr"
+  displayName = "EN"
+  isoCode = "en"
   rtl = false
   dateFormat = "2 January 2006"
   # logo = "img/logo.png"
   # secondaryLogo = "img/secondary-logo.png"
-  # description = "Mon site web génial"
+  # description = "My awesome website"
   # copyright = "Copy, _right?_ :thinking_face:"
 
 # [params.author]
-#   name = "Votre nom"
+#   name = "Your name"
 #   email = "youremail@example.com"
 #   image = "img/blowfish_logo.png"
 #   imageQuality = 96
 #   headline = "I'm only human"
-#   bio = "Un peu sur vous"
+#   bio = "A little about you"
 #   links = [
 #     { email = "mailto:hello@your_domain.com" },
 #     { github = "https://github.com/username" },

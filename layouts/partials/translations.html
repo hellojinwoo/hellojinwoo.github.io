@@ -19,7 +19,8 @@
             {{ range .AllTranslations }}
               <a href="{{ .RelPermalink }}" class="flex items-center">
                 <p
-                  class="text-sm font-sm hover:text-primary-600 dark:hover:text-primary-400"
+                  class="font-medium hover:text-primary-600 dark:hover:text-primary-400"
+                  style="font-size: 1.2rem;"
                   title="{{ .Title }}">
                   {{ .Language.Params.displayName | emojify }}
                 </p>
@@ -30,7 +31,8 @@
             {{ range site.Languages }}
               <a href="{{ .Lang | relLangURL }}/" class="flex items-center">
                 <p
-                  class="text-sm font-sm hover:text-primary-600 dark:hover:text-primary-400"
+                  class="font-medium hover:text-primary-600 dark:hover:text-primary-400"
+                  style="font-size: 1.2rem;"
                   title="{{ .Params.displayName }}">
                   {{ .Params.displayName | emojify }}
                 </p>
