@@ -90,65 +90,81 @@ function getImageExtension(contentType: string | undefined, url: string): string
   return ".jpg";
 }
 
-// Download image from URL and save to disk with correct extension
-// Returns the actual saved file path, or null if download failed
-export async function downloadImage(
+// Single-attempt image download. Returns saved file path or null on failure.
+function downloadImageOnce(
   url: string,
   destFolder: string,
-  baseName: string = "featured"
+  baseName: string
 ): Promise<string | null> {
   return new Promise((resolve) => {
     const protocol = url.startsWith("https") ? https : http;
-    
+
     const request = protocol.get(url, (response) => {
-      // Handle redirects
       if (response.statusCode === 301 || response.statusCode === 302) {
         const redirectUrl = response.headers.location;
         if (redirectUrl) {
-          downloadImage(redirectUrl, destFolder, baseName).then(resolve);
+          downloadImageOnce(redirectUrl, destFolder, baseName).then(resolve);
           return;
         }
       }
-      
+
       if (response.statusCode !== 200) {
         console.warn(`[Warning] Failed to download image: HTTP ${response.statusCode}`);
         resolve(null);
         return;
       }
-      
-      // Get the correct extension based on Content-Type
+
       const contentType = response.headers["content-type"];
       const ext = getImageExtension(contentType, url);
       const destPath = path.join(destFolder, `${baseName}${ext}`);
-      
-      // Ensure directory exists
+
       fs.ensureDirSync(destFolder);
-      
+
       const fileStream = fs.createWriteStream(destPath);
       response.pipe(fileStream);
-      
+
       fileStream.on("finish", () => {
         fileStream.close();
         console.info(`[Info] Downloaded thumbnail to ${destPath}`);
         resolve(destPath);
       });
-      
+
       fileStream.on("error", (err) => {
         console.warn(`[Warning] Failed to save image: ${err.message}`);
         fs.removeSync(destPath);
         resolve(null);
       });
     });
-    
+
     request.on("error", (err) => {
       console.warn(`[Warning] Failed to download image: ${err.message}`);
       resolve(null);
     });
-    
+
     request.setTimeout(30000, () => {
       request.destroy();
       console.warn("[Warning] Image download timeout");
       resolve(null);
     });
   });
+}
+
+// Download image with retries (3 attempts, exponential backoff).
+// Notion S3 URLs occasionally fail transiently (socket hang up), so retry.
+export async function downloadImage(
+  url: string,
+  destFolder: string,
+  baseName: string = "featured"
+): Promise<string | null> {
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const result = await downloadImageOnce(url, destFolder, baseName);
+    if (result) return result;
+    if (attempt < maxAttempts) {
+      const delayMs = 1000 * Math.pow(2, attempt - 1); // 1s, 2s
+      console.info(`[Info] Retrying image download (${attempt}/${maxAttempts - 1}) in ${delayMs}ms: ${baseName}`);
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+  return null;
 }
